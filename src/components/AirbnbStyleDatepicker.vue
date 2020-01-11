@@ -21,21 +21,39 @@
         <h3>{{ mobileHeader || mobileHeaderFallback }}</h3>
       </div>
       <div class="asd__datepicker-header">
-        <div class="asd__change-month-button asd__change-month-button--previous">
-          <button @click="previousMonth" type="button" :aria-label="ariaLabels.previousMonth">
+        <div
+          class="asd__change-month-button asd__change-month-button--previous"
+          :style="customStyleMode ? 'background-color: transparent' : ''"
+        >
+          <button
+            @click="previousMonth"
+            type="button"
+            :aria-label="ariaLabels.previousMonth"
+            :style="customStyleMode ? 'background-color: transparent' : ''"
+          >
             <slot v-if="$slots['previous-month-icon']" name="previous-month-icon"></slot>
             <svg v-else viewBox="0 0 1000 1000">
               <path
+                :style="customStyleMode ? 'fill: white' : ''"
                 d="M336.2 274.5l-210.1 210h805.4c13 0 23 10 23 23s-10 23-23 23H126.1l210.1 210.1c11 11 11 21 0 32-5 5-10 7-16 7s-11-2-16-7l-249.1-249c-11-11-11-21 0-32l249.1-249.1c21-21.1 53 10.9 32 32z"
               ></path>
             </svg>
           </button>
         </div>
-        <div class="asd__change-month-button asd__change-month-button--next">
-          <button @click="nextMonth" type="button" :aria-label="ariaLabels.nextMonth">
+        <div
+          class="asd__change-month-button asd__change-month-button--next"
+          :style="customStyleMode ? 'background-color: transparent' : ''"
+        >
+          <button
+            @click="nextMonth"
+            type="button"
+            :aria-label="ariaLabels.nextMonth"
+            :style="customStyleMode ? 'background-color: transparent' : ''"
+          >
             <slot v-if="$slots['next-month-icon']" name="next-month-icon"></slot>
             <svg v-else viewBox="0 0 1000 1000">
               <path
+                :style="customStyleMode ? 'fill: white' : ''"
                 d="M694.4 242.4l249.1 249.1c11 11 11 21 0 32L694.4 772.7c-5 5-10 7-16 7s-11-2-16-7c-11-11-11-21 0-32l210.1-210.1H67.1c-13 0-23-10-23-23s10-23 23-23h805.4L662.4 274.5c-21-21.1 11-53.1 32-32.1z"
               ></path>
             </svg>
@@ -59,7 +77,7 @@
             :key="month.firstDateOfMonth"
             class="asd__month"
             :class="{'asd__month--hidden': monthIndex === 0 || monthIndex > showMonths}"
-            :style="monthWidthStyles"
+            :style="customStyleMode ? {'background-image': 'linear-gradient(315deg,#4e73df 10%,#212529 100%)', monthWidthStyles} : monthWidthStyles"
           >
             <div class="asd__month-name">
               <select
@@ -75,9 +93,10 @@
                   :value="monthName"
                   :disabled="isMonthDisabled(month.year, idx)"
                   :key="`month-${monthIndex}-${monthName}`"
+                  :style="customStyleMode ? 'color: white' : ''"
                 >{{ monthName }}</option>
               </select>
-              <span v-else>{{ month.monthName }}</span>
+              <span v-else :style="customStyleMode ? 'color: white' : ''">{{ month.monthName }}</span>
 
               <select
                 v-if="showMonthYearSelect"
@@ -91,17 +110,23 @@
                   :value="month.year"
                   :key="`month-${monthIndex}-${year}`"
                   :disabled="true"
+                  :style="customStyleMode ? 'color: white' : ''"
                 >{{ month.year }}</option>
                 <option
                   v-for="year in years"
                   :value="year"
                   :key="`month-${monthIndex}-${year}`"
+                  :style="customStyleMode ? 'color: white' : ''"
                 >{{ year }}</option>
               </select>
-              <span v-else>{{ month.year }}</span>
+              <span v-else :style="customStyleMode ? 'color: white' : ''">{{ month.year }}</span>
             </div>
 
-            <table class="asd__month-table" role="presentation">
+            <table
+              class="asd__month-table"
+              role="presentation"
+              :style="customStyleMode ? 'background-color: transparent' : ''"
+            >
               <tbody>
                 <tr class="asd__week" v-for="(week, index) in month.weeks" :key="index">
                   <td
@@ -124,49 +149,27 @@
                       'asd__selected-date-two': fullDate && fullDate === selectedDate2,
                     }, customizedDateClass(fullDate)]"
                     :style="getDayStyles(fullDate)"
+                    style="outline:none;"
                     @mouseover="() => { setHoverDate(fullDate) }"
                   >
-                    <button
-                      class="asd__day-button"
-                      type="button"
-                      v-if="dayNumber"
-                      tabindex="-1"
-                      :date="fullDate"
-                      :disabled="isDisabled(fullDate)"
-                      @click="() => { selectDate(fullDate) }"
-                    >{{ dayNumber }}</button>
+                    <div :style="getButtonStyles(fullDate)">
+                      <button
+                        class="asd__day-button"
+                        type="button"
+                        v-if="dayNumber"
+                        tabindex="-1"
+                        :date="fullDate"
+                        :disabled="isDisabled(fullDate)"
+                        style="outline: none;"
+                        @click="() => { calendarMode ? showPopup(fullDate) : selectDate(fullDate) }"
+                      >{{ dayNumber }}</button>
+                    </div>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
         </transition-group>
-        <div
-          v-if="showShortcutsMenuTrigger"
-          :class="{ 'asd__keyboard-shortcuts-menu': true, 'asd__keyboard-shortcuts-show': showKeyboardShortcutsMenu}"
-          :style="keyboardShortcutsMenuStyles"
-        >
-          <div class="asd__keyboard-shortcuts-title">{{ texts.keyboardShortcuts }}</div>
-          <button
-            class="asd__keyboard-shortcuts-close"
-            ref="keyboard-shortcus-menu-close"
-            tabindex="0"
-            @click="closeKeyboardShortcutsMenu"
-            :aria-label="ariaLabels.closeKeyboardShortcutsMenu"
-          >
-            <slot v-if="$slots['close-shortcuts-icon']" name="close-shortcuts-icon"></slot>
-            <div v-else class="asd__mobile-close-icon" aria-hidden="true">X</div>
-          </button>
-          <ul class="asd__keyboard-shortcuts-list">
-            <li v-for="(shortcut, i) in keyboardShortcuts" :key="i">
-              <span
-                class="asd__keyboard-shortcuts-symbol"
-                :aria-label="shortcut.symbolDescription"
-              >{{ shortcut.symbol }}</span>
-              {{ shortcut.label }}
-            </li>
-          </ul>
-        </div>
       </div>
       <div class="asd__action-buttons" v-if="mode !== 'single' && showActionButtons">
         <button @click="closeDatepickerCancel" type="button">{{ texts.cancel }}</button>
@@ -176,16 +179,6 @@
           :style="{color: colors.selected}"
           type="button"
         >{{ texts.apply }}</button>
-      </div>
-      <div v-if="showShortcutsMenuTrigger" class="asd__keyboard-shortcuts-trigger-wrapper">
-        <button
-          class="asd__keyboard-shortcuts-trigger"
-          :aria-label="ariaLabels.openKeyboardShortcutsMenu"
-          tabindex="0"
-          @click="openKeyboardShortcutsMenu"
-        >
-          <span>?</span>
-        </button>
       </div>
     </div>
   </transition>
@@ -250,6 +243,10 @@ export default {
     },
     trigger: { type: Boolean, default: false },
     closeAfterSelect: { type: Boolean, default: false },
+    forceShow: { type: Boolean, default: false },
+    bookings: { type: Array, default: () => [] },
+    calendarMode: { type: Boolean, default: false },
+    customStyleMode: { type: Boolean, default: false },
   },
   data() {
     return {
@@ -526,6 +523,8 @@ export default {
     this.$el.addEventListener('keydown', this.trapKeyboardInput)
     this.triggerElement.addEventListener('keyup', this.handleTriggerInput)
     this.triggerElement.addEventListener('click', this._handleWindowClickEvent)
+
+    if (this.forceShow) this.toggleDatepicker()
   },
   destroyed() {
     window.removeEventListener('resize', this._handleWindowResizeEvent)
@@ -542,6 +541,8 @@ export default {
       const isInRange = this.isInRange(date)
       const isDisabled = this.isDisabled(date)
       const isHoveredInRange = this.isHoveredInRange(date)
+      const isComplete = this.isComplete(date)
+      const isOptional = this.isOptional(date)
 
       let styles = {
         width: (this.width - 30) / 7 + 'px',
@@ -552,22 +553,66 @@ export default {
           : isInRange
           ? this.colors.inRange
           : '',
-        color: isSelected
+        color: this.calendarMode
+          ? isComplete || isOptional
+            ? 'black'
+            : this.customStyleMode
+            ? 'white'
+            : 'black'
+          : isSelected
           ? this.colors.selectedText
           : isInRange || isHoveredInRange
           ? this.colors.selectedText
           : this.colors.text,
-        border: isSelected
+        border: this.calendarMode
+          ? '0px'
+          : isSelected
           ? '1px double ' + this.colors.selected
           : (isInRange && this.allDatesSelected) || isHoveredInRange
           ? '1px double ' + this.colors.inRangeBorder
           : '',
+        borderRadius: this.calendarMode ? '50px' : '0px',
       }
 
       if (isDisabled) {
         styles.background = this.colors.disabled
       }
       return styles
+    },
+    getButtonStyles(date) {
+      const isSelected = this.isSelected(date)
+      const isInRange = this.isInRange(date)
+      const isHoveredInRange = this.isHoveredInRange(date)
+      const isOptional = this.isOptional(date)
+      const isComplete = this.isComplete(date)
+
+      return {
+        borderRadius: '50px',
+        background: this.calendarMode
+          ? isComplete
+            ? 'rgba(0, 255, 31, 0.5)'
+            : isOptional
+            ? 'rgba(255,204,0,0.7)'
+            : ''
+          : isSelected
+          ? this.colors.selected
+          : isHoveredInRange
+          ? this.colors.hoveredInRange
+          : isInRange
+          ? this.colors.inRange
+          : '',
+      }
+    },
+    findAllBookingsWithDate(date) {
+      return this.bookings.filter(x => x.startDate <= date && x.endDate >= date)
+    },
+    isOptional(date) {
+      let bookings = this.findAllBookingsWithDate(date)
+      if (bookings.find(x => x.status === 'Optional')) return true
+    },
+    isComplete(date) {
+      let bookings = this.findAllBookingsWithDate(date)
+      if (bookings.find(x => x.status === 'Complete')) return true
     },
     getAriaLabelForDate(date) {
       const dateLabel = format(date, this.dateLabelFormat)
@@ -877,6 +922,10 @@ export default {
           this.closeDatepicker()
         }
       }
+    },
+    showPopup(date) {
+      var vm = this
+      this.$emit('show-popup', vm.findAllBookingsWithDate(date))
     },
     setHoverDate(date) {
       this.hoverDate = date
