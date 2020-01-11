@@ -604,15 +604,15 @@ export default {
       }
     },
     findAllBookingsWithDate(date) {
-      return this.bookings.filter(x => x.startDate <= date && x.endDate >= date)
+      return this.bookings.filter(x => x.bookingStart <= date && x.bookingEnd >= date)
     },
     isOptional(date) {
       let bookings = this.findAllBookingsWithDate(date)
-      if (bookings.find(x => x.status === 'Optional')) return true
+      if (bookings.find(x => x.bookingStatus === 'Optional')) return true
     },
     isComplete(date) {
       let bookings = this.findAllBookingsWithDate(date)
-      if (bookings.find(x => x.status === 'Complete')) return true
+      if (bookings.find(x => x.bookingStatus === 'Complete')) return true
     },
     getAriaLabelForDate(date) {
       const dateLabel = format(date, this.dateLabelFormat)

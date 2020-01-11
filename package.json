@@ -1,12 +1,12 @@
 {
-  "name": "vue-airbnb-style-datepicker",
-  "version": "2.7.0",
-  "description": "A VueJs version of the popular AirBnb datepicker",
-  "main": "dist/vue-airbnb-style-datepicker.cjs.js",
-  "module": "dist/vue-airbnb-style-datepicker.es.js",
-  "unpkg": "dist/vue-airbnb-style-datepicker.js",
+  "name": "booking-datepicker",
+  "version": "2.8.0",
+  "description": "Tweaked Mikael Edebro datepicker",
+  "main": "dist/booking-datepicker.cjs.js",
+  "module": "dist/booking-datepicker.es.js",
+  "unpkg": "dist/booking-datepicker.js",
   "repository": {
-    "url": "MikaelEdebro/vue-airbnb-style-datepicker",
+    "url": "git+https://github.com/igor-kostovski/vue-airbnb-style-datepicker.git",
     "type": "git"
   },
   "files": [
@@ -21,7 +21,7 @@
     "test:watch": "jest --watch",
     "test:debug": "node --inspect --inspect-brk node_modules/jest/bin/jest.js"
   },
-  "author": "MikaelEdebro <mikael.edebro@gmail.com>",
+  "author": "IgorKostovski <igorkostovski98@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "@vue/test-utils": "^1.0.0-beta.12",
@@ -81,5 +81,13 @@
   },
   "dependencies": {
     "v-click-outside": "^2.0.1"
+  },
+  "bugs": {
+    "url": "https://github.com/igor-kostovski/vue-airbnb-style-datepicker/issues"
+  },
+  "homepage": "https://github.com/igor-kostovski/vue-airbnb-style-datepicker#readme",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
   }
 }
