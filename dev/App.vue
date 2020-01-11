@@ -7,7 +7,6 @@
       <button @click="toggleTrigger">Toggle trigger</button>
     </div>
     <div v-if="showDatepickers">
-
       <div class="datepicker-container with-input">
         <h3>Range datepicker with input</h3>
         <div class="datepicker-trigger">
@@ -56,7 +55,9 @@
       <div class="datepicker-container with-button">
         <h3>Range datepicker with button</h3>
         <div class="datepicker-trigger">
-          <button id="datepicker-button-trigger">{{ formatDates(buttonDateOne, buttonDateTwo) || 'Select dates' }}</button>
+          <button
+            id="datepicker-button-trigger"
+          >{{ formatDates(buttonDateOne, buttonDateTwo) || 'Select dates' }}</button>
 
           <airbnb-style-datepicker
             :trigger-element-id="'datepicker-button-trigger'"
@@ -97,13 +98,7 @@
       </div>
 
       <div class="datepicker-container inline-with-input">
-        <h3>Inline datepicker with disabled dates</h3>
-        <input
-          id="datepicker-disabled-dates-trigger"
-          :value="formatDates(withDisabledDatesDateOne)"
-          type="text"
-          placeholder="Select date"
-        >
+        <span id="datepicker-disabled-dates-trigger"></span>
         <airbnb-style-datepicker
           :trigger-element-id="'datepicker-disabled-dates-trigger'"
           :mode="'single'"
@@ -111,33 +106,12 @@
           :date-one="withDisabledDatesDateOne"
           :months-to-show="2"
           :disabled-dates="disabledDates"
+          :bookings="bookings"
+          :calendar-mode="true"
+          :custom-style-mode="false"
           @date-one-selected="val => { withDisabledDatesDateOne = val }"
+          @show-popup="showPopup"
         />
-      </div>
-
-      <div class="datepicker-container with-button">
-        <h3>Test callback methods</h3>
-        <div class="datepicker-trigger">
-          <button id="datepicker-callback-trigger">{{ formatDates(callbackDateOne, callbackDateTwo) || 'Select dates' }}</button>
-
-          <airbnb-style-datepicker
-            :trigger-element-id="'datepicker-callback-trigger'"
-            :mode="'range'"
-            :date-one="callbackDateOne"
-            :date-two="callbackDateTwo"
-            :fullscreen-mobile="true"
-            :months-to-show="2"
-            :offset-y="10"
-            @date-one-selected="val => { callbackDateOne = val }"
-            @date-two-selected="val => { callbackDateTwo = val }"
-            @apply="applyMethod"
-            @closed="closedMethod"
-            @cancelled="cancelledMethod"
-            @opened="openedMethod"
-            @previous-month="changeMonthMethod"
-            @next-month="changeMonthMethod"
-          />
-        </div>
       </div>
     </div>
   </div>
@@ -164,6 +138,8 @@ export default {
       alignRight: false,
       showDatepickers: true,
       trigger: false,
+      bookings: [],
+      timer: {},
     }
   },
   computed: {
@@ -175,7 +151,49 @@ export default {
     setTimeout(() => {
       this.inputDateOne = '2019-01-12'
       this.inputDateTwo = ''
-    }, 5000)
+      this.bookings = [
+        {
+          startDate: '2020-01-03',
+          endDate: '2020-01-10',
+          status: 'Complete',
+        },
+        {
+          startDate: '2020-01-11',
+          endDate: '2020-01-18',
+          status: 'Optional',
+        },
+        {
+          startDate: '2020-01-19',
+          endDate: '2020-01-26',
+          status: 'Complete',
+        },
+        {
+          startDate: '2020-01-27',
+          endDate: '2020-02-03',
+          status: 'Optional',
+        },
+        {
+          startDate: '2020-02-04',
+          endDate: '2020-02-11',
+          status: 'Complete',
+        },
+        {
+          startDate: '2020-02-12',
+          endDate: '2020-02-19',
+          status: 'Optional',
+        },
+        {
+          startDate: '2020-02-26',
+          endDate: '2020-03-03',
+          status: 'Complete',
+        },
+        {
+          startDate: '2020-03-04',
+          endDate: '2020-03-11',
+          status: 'Optional',
+        },
+      ]
+    }, 1000)
   },
   methods: {
     formatDates(dateOne, dateTwo) {
@@ -212,6 +230,11 @@ export default {
     },
     changeMonthMethod(visibleMonths) {
       console.log('change months', visibleMonths)
+    },
+    showPopup(val) {
+      alert(
+        `There is ${val[0].status} booking with booking number ${val[0].bookingNumber} on this date`
+      )
     },
   },
 }
