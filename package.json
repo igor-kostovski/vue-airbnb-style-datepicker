@@ -1,10 +1,10 @@
 {
   "name": "booking-datepicker",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "description": "Tweaked Mikael Edebro datepicker",
-  "main": "dist/booking-datepicker.cjs.js",
-  "module": "dist/booking-datepicker.es.js",
-  "unpkg": "dist/booking-datepicker.js",
+  "main": "dist/vue-airbnb-style-datepicker.cjs.js",
+  "module": "dist/vue-airbnb-style-datepicker.es.js",
+  "unpkg": "dist/vue-airbnb-style-datepicker.js",
   "repository": {
     "url": "git+https://github.com/igor-kostovski/vue-airbnb-style-datepicker.git",
     "type": "git"
